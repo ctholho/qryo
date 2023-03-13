@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  database:
+    container_name: database
+    image: postgres:latest
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: 'dbuser'
+      POSTGRES_PASSWORD: 'dbpass'
+      POSTGRES_DB: 'mydb'
+
+  directus:
+    container_name: directus
+    image: directus/directus:latest
+    volumes:
+      - uploads:/directus/uploads
+    ports:
+      - 8055:8055
+    depends_on:
+      - database
+    environment:
+      PUBLIC_URL: https://8055-${WORKSPACE_HOST}
+      SECRET: 'my-directus-secret'
+      KEY: b1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6
+      # db settings
+      DB_CLIENT: 'pg'
+      DB_HOST: 'database'
+      DB_PORT: '5432'
+      DB_DATABASE: 'mydb'
+      DB_USER: 'dbuser'
+      DB_PASSWORD: 'dbpass'
+      # Admin settings if no database seed is used
+      ADMIN_EMAIL: admin@example.com
+      ADMIN_PASSWORD: admin
+      # CORS
+      CORS_ENABLED: true
+      CORS_ORIGIN: https://3000-${WORKSPACE_HOST},localhost:3000
+      CORS_METHODS: GET, POST,PATCH,DELETE
+
+volumes:
+  postgres:
+  uploads:
