@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useQuery } from '@tanstack/vue-query'
+import { read } from '@akronym/offline-crud'
+
+read('haha')
 
 interface Thing {
   id?: number;
   content?: string;
 }
 
-const initialThings: Thing[] = [
-  { id: 9999, content: 'inital' },
-]
 const placeholderThings: Thing[] = [
   { id: 9999, content: 'placeholder' },
 ]
@@ -23,7 +22,6 @@ const getThings = async () => await getItems<Thing[]>({
 const { isLoading, isError, data, error, refetch } = useQuery({
   queryKey: ['things'],
   queryFn: getThings,
-  initialData: initialThings,
   placeholderData: placeholderThings,
 })
 
@@ -32,7 +30,7 @@ const { isLoading, isError, data, error, refetch } = useQuery({
 <template>
   <div class="flex justify-center items-center h-full">
     <div class="grid grid-cols-4 gap-4 w-128">
-      <div class="col-span-4">isLoading: {{ isLoading }}</div>
+      <div class="col-span-4" :class="isLoading ? 'text-red-500' : ''">isLoading: {{ isLoading }}</div>
       <button @click="refetch()" class="div-2 border-2 border-white px-8 py-2 text-2xl rounded-lg active:bg-gray-800">Sync</button>
       <input
         v-if="data?.[0]?.content"
@@ -48,7 +46,11 @@ const { isLoading, isError, data, error, refetch } = useQuery({
       </div>
       <div class="col-span-4 h-14 relative border-2 border-green-400 p-2 text-2xl rounded-lg overflow-hidden">
         <!-- {{ data?.[0]?.content }} -->
-        <div class="absolute bottom-0 right-0 m-1 text-xs text-gray-500"><s>in IndexedDB</s></div>
+        <div class="absolute bottom-0 right-0 m-1 text-xs text-gray-500"><s>permanent storage</s></div>
+      </div>
+      <div class="col-span-2 h-28 relative border-2 border-green-400 p-2 text-xs rounded-lg overflow-y-auto">
+        <!-- {{ data?.[0]?.content }} -->
+        <div class="absolute bottom-0 right-0 m-1 text-xs text-gray-500"><s>mutation observer</s></div>
       </div>
     </div>
   </div>

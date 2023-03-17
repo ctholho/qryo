@@ -1,0 +1,38 @@
+{
+  "name": "@akronym/offline-crud",
+  "version": "0.0.1",
+  "description": "",
+  "author": "ctholho",
+  "license": "MIT",
+  "repository": "akronym/offline",
+  "homepage": "https://akronym.org",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/ctholho"
+  },
+  "types": "build/lib/index.d.ts",
+  "main": "build/lib/index.js",
+  "module": "build/lib/index.esm.js",
+  "exports": {
+    ".": {
+      "types": "./build/lib/index.d.ts",
+      "import": "./build/lib/index.mjs",
+      "default": "./build/lib/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "files": [
+    "build/lib/*",
+    "build/umd/*",
+    "src"
+  ],
+  "scripts": {
+    "clean": "rimraf ./build",
+    "test:eslint": "eslint --ext .ts,.tsx ./src",
+    "test:types": "tsc",
+    "test:lib": "jest --config ./jest.config.ts",
+    "test:lib:dev": "pnpm run test:lib --watch",
+    "build:types": "tsc --build"
+  }
+}

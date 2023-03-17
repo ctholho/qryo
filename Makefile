@@ -9,12 +9,13 @@ help: ## This help
 
 .PHONY: start-debug
 start-debug: # start shift app but show docker logs
-	docker compose -f directus/docker-compose.yaml
+	docker compose -f server/docker-compose.yaml up
 
 .PHONY: start-barebones
 start-barebones:
-	docker compose -f directus/docker-compose.yaml up -d
-	cd nuxt-example && yarn dev
+	docker compose -f server/docker-compose.yaml up -d
+	pm2 --name packages start pnpm -- run watch
+	cd examples/nuxt && pm2 --name nuxt-example start pnpm -- run dev
 
 .PHONY: start
 start: ## Run the shift app
@@ -26,7 +27,9 @@ start: ## Run the shift app
 
 .PHONY: stop
 stop: ## Stop directus and dev server
-	docker compose -f directus/docker-compose.yaml down
+	docker compose -f server/docker-compose.yaml down
+	pm2 delete 0
+	pm2 delete 1
 	@echo "Dev Servers stopped."
 
 .PHONY: ssh

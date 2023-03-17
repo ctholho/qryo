@@ -1,0 +1,7 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/indirectus" },
+    { "path": "packages/offline-crud" },
+  ]
+}
