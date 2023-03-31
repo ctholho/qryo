@@ -2,6 +2,6 @@
   "files": [],
   "references": [
     { "path": "packages/indirectus" },
-    { "path": "packages/offline-crud" },
+    { "path": "packages/qryo" },
   ]
 }

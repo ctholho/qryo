@@ -4,9 +4,9 @@ const appHost = '3000-' + process.env.WORKSPACE_HOST
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  ssr: false,
   telemetry: true,
   modules: [
-    'nuxt-directus',
     '@nuxtjs/tailwindcss',
     // '@nuxtjs/i18n',
     '@vueuse/nuxt',
@@ -16,9 +16,6 @@ export default defineNuxtConfig({
       apiUrl,
       appUrl,
     }
-  },
-  directus: {
-    url: apiUrl,
   },
   vite: {
     server: {

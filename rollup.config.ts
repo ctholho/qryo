@@ -35,12 +35,16 @@ const babelPlugin = babel({
 export default function rollup(options: RollupOptions): RollupOptions[] {
   return [
     ...buildConfigs({
-      name: 'offline-crud',
-      packageDir: 'packages/offline-crud',
-      jsName: 'OfflineCrud',
+      name: 'qryo',
+      packageDir: 'packages/qryo',
+      jsName: 'Qryo',
       outputFile: 'index',
       entryFile: ['src/index.ts'],
-      globals: { },
+      globals: { 
+        '@directus/sdk': 'Directus',
+        '@tanstack/vue-query': 'Query',
+        'vue': 'vue'
+      },
     }),
     ...buildConfigs({
       name: 'indirectus',
@@ -49,7 +53,7 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
       outputFile: 'index',
       entryFile: ['src/index.ts'],
       globals: {
-        '@akronym/offline-crud': 'OfflineCrud',
+        '@akronym/qryo': 'Qryo',
       },
     }),
   ]
@@ -204,7 +208,6 @@ function cjs({
     preserveModules: true,
     entryFileNames: '[name].js',
   }
-
   return {
     // CJS
     external,
@@ -218,10 +221,8 @@ function cjs({
       replace({
         // TODO: figure out a better way to produce extensionless cjs imports
         "require('./logger.js')": "require('./logger')",
-        "require('./reactBatchedUpdates.js')":
-          "require('./reactBatchedUpdates')",
-        "require('./useSyncExternalStore.js')":
-          "require('./useSyncExternalStore')",
+        "require('./reactBatchedUpdates.js')": "require('./reactBatchedUpdates')",
+        "require('./useSyncExternalStore.js')": "require('./useSyncExternalStore')",
         preventAssignment: true,
         delimiters: ['', ''],
       }),

@@ -8,7 +8,7 @@ help: ## This help
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 .PHONY: start-debug
-start-debug: # start shift app but show docker logs
+start-debug: # start apps and show docker logs
 	docker compose -f server/docker-compose.yaml up
 
 .PHONY: start-barebones
@@ -16,20 +16,22 @@ start-barebones:
 	docker compose -f server/docker-compose.yaml up -d
 	pm2 --name packages start pnpm -- run watch
 	cd examples/nuxt && pm2 --name nuxt-example start pnpm -- run dev
+	pm2 --name docs start pnpm -- run docs:dev
 
 .PHONY: start
-start: ## Run the shift app
-	make start-barebones
+start: ## Start developing the app
+	@make start-barebones
 	@clear
+	@echo "Watching \033[32m/packages/**\033[0m and starting example app."
 	@echo "⚠️ These URLs are \033[31mpublicly\033[0m available as long as this workspace is running!\n"
 	@echo "\033[34mNuxt App:\033[0m $(shell gp url 3000)"
-	@echo "\033[34mDirectus:\033[0m $(shell gp url 8055)\n"
+	@echo "\033[34mDirectus:\033[0m $(shell gp url 8055)"
+	@echo "\033[34mDocs:\033[0m $(shell gp url 5173)\n"
 
 .PHONY: stop
 stop: ## Stop directus and dev server
-	docker compose -f server/docker-compose.yaml down
-	pm2 delete 0
-	pm2 delete 1
+	@docker compose -f server/docker-compose.yaml down
+	@pm2 kill
 	@echo "Dev Servers stopped."
 
 .PHONY: ssh

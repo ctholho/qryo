@@ -16,6 +16,7 @@ artifacts
 .rpt2_cache
 coverage
 *.tgz
+**/cache
 
 # misc
 .DS_Store

@@ -26,6 +26,10 @@ ports:
     port: 8055
     onOpen: ignore
     visibility: public
+  - name: docs
+    port: 5173
+    onOpen: ignore
+    visibility: public
   - name: postgres
     description: SQL Database
     port: 54322
