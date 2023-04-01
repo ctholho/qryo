@@ -5,9 +5,10 @@
 tasks:
   - name: install
     init: |
-      npm install pm2 -g \
-      && pnpm i --shamefully-hoist
-    command: make start
+      nvm install
+      npm install pm2 -g
+      pnpm i --shamefully-hoist
+      make start
 
 ports:
   - name: nuxt-example
@@ -22,8 +23,3 @@ ports:
     port: 5173
     onOpen: ignore
     visibility: public
-  - name: postgres
-    description: SQL Database
-    port: 54322
-    onOpen: ignore
-    visibility: private
