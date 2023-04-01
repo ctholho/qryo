@@ -31,11 +31,6 @@ const updateInput = (value: string) => {
   inputContent.value = value;
 }
 
-const fetchServer = () => {
-  enabled.value = true
-  refetch()
-}
-
 const saveInput = () => {
   mutate({ content: inputContent.value })
 }
@@ -49,10 +44,11 @@ watchEffect(() => {
 <template>
   <div class="flex justify-center items-center h-full">
     <div class="grid grid-cols-4 gap-4 w-128">
-      <div class="col-span-4 flex">
+      <div class="col-span-4 flex space-x-4">
         <button class="border-white border-2 px-4 py-1 rounded-lg" :class="!online && 'line-through'" @click="() => { online = !online}">online</button>
+        <button class="border-white border-2 px-4 py-1 rounded-lg" :class="!enabled && 'line-through'" @click="() => { enabled = !enabled}">enable</button>
       </div>
-      <button @click="fetchServer" class="div-2 border-2 border-white px-8 py-2 text-2xl rounded-lg active:bg-gray-800">Sync</button>
+      <button @click="refetch" class="div-2 border-2 border-white px-8 py-2 text-2xl rounded-lg active:bg-gray-800">Sync</button>
       <input
         v-if="data?.content"
         class="col-span-2 div-1 rounded-lg text-2xl p-2 text-black"
