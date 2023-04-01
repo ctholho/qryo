@@ -1,16 +1,17 @@
 import type { DehydratedState, VueQueryPluginOptions } from "@tanstack/vue-query";
 import { VueQueryPlugin, QueryClient, hydrate, dehydrate } from "@tanstack/vue-query";
 import { persistQueryClient } from '@tanstack/query-persist-client-core'
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
 import { QryoPlugin } from '@akronym/qryo'
 import { get, set, del } from "idb-keyval";
 import { PersistedClient, Persister } from "@tanstack/query-persist-client-core";
 
 
 export default defineNuxtPlugin((nuxt) => {
-  const vueQueryState = useState<DehydratedState | null>("vue-query");
+  // Nuxt3 specific way to load runtime env vars
+  const config = useRuntimeConfig();
+  const directus = { url: config.public.apiUrl }
 
-  const directus = { url: 'https://8055-ctholho-offlinefirstcru-bfpofmwby7b.ws-eu93.gitpod.io' }
+  const vueQueryState = useState<DehydratedState | null>("vue-query");
 
   // Modify your Vue Query global settings here
   const queryClient = new QueryClient({
@@ -43,11 +44,9 @@ export default defineNuxtPlugin((nuxt) => {
   const clientPersister = (queryClient: QueryClient) => {
     return persistQueryClient({
       queryClient,
-      // persister: createSyncStoragePersister({ storage: localStorage }),
       persister: createIDBPersister()
     })
   }
-
 
   const options: VueQueryPluginOptions = { queryClient, clientPersister }
 

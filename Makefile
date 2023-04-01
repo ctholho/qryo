@@ -34,6 +34,10 @@ stop: ## Stop directus and dev server
 	@pm2 kill
 	@echo "Dev Servers stopped."
 
+.PHONY: logs
+logs: ## Show logs of packages
+	@pm2 logs packages --lines 100
+
 .PHONY: ssh
 ssh: ## Connect terminal via SSH (with SSH Key)
 	@$(eval HOST_URL := $(shell echo "${GITPOD_WORKSPACE_URL}" | sed 's#.*${GITPOD_WORKSPACE_ID}\(\)#\1#'))

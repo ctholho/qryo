@@ -13,13 +13,11 @@ export const QryoPlugin = {
 
 export const qryo = (action: keyof IItems<any>, collection: string, key: any, queryOptions: any = {}) => {
   const directus = inject('directus') as IDirectus<any>
-  console.log('queryOptions', queryOptions)
   if (directus) {
     if (action.startsWith('update')) {
       return useMutation({
-        // @ts-ignore
         mutationFn: async (updateData) => {
-          console.log('hahaha', updateData)
+          // @ts-ignore
           return directus.items(collection)[action](key, updateData)
         },
         ... queryOptions
