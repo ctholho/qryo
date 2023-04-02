@@ -59,5 +59,8 @@
     "unplugin-icons": "^0.15.3",
     "unplugin-vue-components": "^0.24.1",
     "vitepress": "1.0.0-alpha.60"
+  },
+  "dependencies": {
+    "pm2": "^5.3.0"
   }
 }

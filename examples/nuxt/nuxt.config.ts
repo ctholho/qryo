@@ -1,6 +1,10 @@
-const apiUrl = 'https://8055-' + process.env.WORKSPACE_HOST
-const appUrl = 'https://3000-' + process.env.WORKSPACE_HOST
-const appHost = '3000-' + process.env.WORKSPACE_HOST
+let apiUrl = 'http://localhost:8055'
+let appUrl = 'http://localhost:3000'
+
+if (process.env.WORKSPACE_HOST) {
+  apiUrl = 'https://8055-' + process.env.WORKSPACE_HOST
+  appUrl = 'https://3000-' + process.env.WORKSPACE_HOST
+}
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({

@@ -1,12 +1,14 @@
 # Qryo – brainfreezingly simple offline-first apps
 
-Qryo helps you build offline-first web apps. It concerns itself with server requests. To make assets (js, css, html) available offline you should rely on different technologies like PWAs or hybrid mobile apps.
+Qryo helps you build offline-first web apps. It concerns itself with server requests like CRUD REST calls or RPCs. For offline static assets use PWAs.
 
-However, Qryo is not yet functional. This is a proof of concept and public lab and I'm playing around with tanstack/query, Nuxt and Directus.
+Qryo is **not yet functional**. This is a proof of concept and public laboratory.
+
+Stack: Tanstack/query, Nuxt and Directus
 
 ## Running example
 
-Easiest way is to open this project in Gitpod. 
+The easiest way is to open this project in Gitpod.
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/ctholho/qryo)
 
@@ -18,6 +20,8 @@ See which JS scripts are running with `pm2 ps`. Get the build logs for the packa
 or run `make logs`.
 
 Run `make help` for all available commands.
+
+Running locally works the same, but there's no https support yet (necessary for Service Workers)
 
 ## Roadmap
 

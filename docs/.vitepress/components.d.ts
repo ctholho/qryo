@@ -12,6 +12,5 @@ declare module '@vue/runtime-core' {
     Home: typeof import('./theme/components/Home.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    VscodeIconsFileTypeReactjs: typeof import('~icons/vscode-icons/file-type-reactjs')['default']
   }
 }

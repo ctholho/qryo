@@ -5,5 +5,3 @@ RUN bash -c 'VERSION="18.12.0" \
     && nvm use $VERSION && nvm alias default $VERSION'
 
 RUN echo "nvm use default &>/dev/null" >> ~/.bashrc.d/51-nvm-fix
-
-RUN bash -c 'npm install pm2 -g'

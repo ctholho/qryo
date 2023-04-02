@@ -14,9 +14,9 @@ start-debug: # start apps and show docker logs
 .PHONY: start-barebones
 start-barebones:
 	docker compose -f server/docker-compose.yaml up -d
-	pm2 --name packages start pnpm -- run watch
-	cd examples/nuxt && pm2 --name nuxt-example start pnpm -- run dev
-	pm2 --name docs start pnpm -- run docs:dev
+	pnpm exec pm2 --name packages start pnpm -- run watch
+	cd examples/nuxt && pnpm exec pm2 --name nuxt-example start pnpm -- run dev
+	pnpm exec pm2 --name docs start pnpm -- run docs:dev
 
 .PHONY: start
 start: ## Start developing the app
@@ -26,17 +26,24 @@ start: ## Start developing the app
 	@echo "⚠️ These URLs are \033[31mpublicly\033[0m available as long as this workspace is running!\n"
 	@echo "\033[34mNuxt App:\033[0m $(shell gp url 3000)"
 	@echo "\033[34mDirectus:\033[0m $(shell gp url 8055)"
-	@echo "\033[34mDocs:\033[0m $(shell gp url 5173)\n"
+	@echo "\033[34mDocs:\033[0m $(shell gp url 5173)\n\n"
+	@echo "Login for Directus: admin@example.com, password: admin\n"
 
 .PHONY: stop
 stop: ## Stop directus and dev server
 	@docker compose -f server/docker-compose.yaml down
-	@pm2 kill
+	@pnpm exec pm2 kill
 	@echo "Dev Servers stopped."
+
+.PHONY: reset
+reset: ## Prune volumes and clean built packages and examples
+	@docker volume prune -f
+	@pnpm run clean
+	@rm -rf ./examples/nuxt/.nuxt
 
 .PHONY: logs
 logs: ## Show logs of packages
-	@pm2 logs packages --lines 100
+	@pnpm exec pm2 logs packages --lines 100
 
 .PHONY: ssh
 ssh: ## Connect terminal via SSH (with SSH Key)

@@ -23,6 +23,24 @@ export const qryo = (action: keyof IItems<any>, collection: string, key: any, qu
         ... queryOptions
       })
     }
+    else if (action.startsWith('create')) {
+      return useMutation({
+        mutationFn: async (createData) => {
+          // @ts-ignore
+          return directus.items(collection)[action](createData)
+        },
+        ... queryOptions
+      })
+    }
+    else if (action.startsWith('delete')) {
+      return useMutation({
+        mutationFn: async (key: any) => {
+          // @ts-ignore
+          return directus.items(collection)[action](key)
+        },
+        ... queryOptions
+      })
+    }
     else { // if (action.startsWith('read')) {
       return useQuery({
         queryKey: [collection, key],

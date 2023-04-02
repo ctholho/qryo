@@ -14,7 +14,7 @@ const { data, refetch } = qryo('readOne', 'thing', 1, { placeholderData, enabled
 
 const { mutate } = qryo('updateOne', 'thing', 1)
 
-const getMutations = async () => (await get('qryo')).clientState.mutations
+const getMutations = async () => (await get('qryo'))?.clientState.mutations
 const mutations = ref(await getMutations())
 const updateMutations = async () => {
   mutations.value = await getMutations()
@@ -47,6 +47,7 @@ watchEffect(() => {
       <div class="col-span-4 flex space-x-4">
         <button class="border-white border-2 px-4 py-1 rounded-lg" :class="!online && 'line-through'" @click="() => { online = !online}">online</button>
         <button class="border-white border-2 px-4 py-1 rounded-lg" :class="!enabled && 'line-through'" @click="() => { enabled = !enabled}">enable</button>
+        <NuxtLink to="/todos" class="self-center">Go to todos</NuxtLink>
       </div>
       <button @click="refetch" class="div-2 border-2 border-white px-8 py-2 text-2xl rounded-lg active:bg-gray-800">Sync</button>
       <input
