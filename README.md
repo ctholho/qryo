@@ -1,6 +1,8 @@
-# Qryo
+# Qryo – brainfreezingly simple offline-first apps
 
-Playing around with offline-first queries with tanstack/query, Nuxt and Directus.
+Qryo helps you build offline-first web apps. It concerns itself with server requests. To make assets (js, css, html) available offline you should rely on different technologies like PWAs or hybrid mobile apps.
+
+However, Qryo is not yet functional. This is a proof of concept and public lab and I'm playing around with tanstack/query, Nuxt and Directus.
 
 ## Running example
 
@@ -16,3 +18,21 @@ See which JS scripts are running with `pm2 ps`. Get the build logs for the packa
 or run `make logs`.
 
 Run `make help` for all available commands.
+
+## Roadmap
+
+1. Handle authentication and offer tools for offline authentication (if offline data is available)
+2. Encrypt user data
+  * Consider putting encryption logic into web worker for client performance
+  * The query persister needs to have access to app context like user credentials.
+3. Find the best way to prefetch "all necessary" data on app initialization. E.g.:
+  * Require devs to handle it themselves
+  * Offer global config, this still requires duplicated explicit naming of the endpoints (in component and in config)
+  * Parse codebase during build process and prefetch data if queries satisfy a prefetch signal. How should that look? What about paginated queries? How to handle dynamic useQuery calls? This is impossible:
+  ```
+  { prefetch, ...someQuery } = useQuery({
+    queryKey: ['todos', todoId],
+    queryFn: async () => await fetchTodoById(todoId)
+  })
+  ```
+4. 
