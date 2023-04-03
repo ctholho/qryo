@@ -4,12 +4,16 @@ import { persistQueryClient } from '@tanstack/query-persist-client-core'
 import { QryoPlugin } from '@akronym/qryo'
 import { get, set, del } from "idb-keyval";
 import { PersistedClient, Persister } from "@tanstack/query-persist-client-core";
+import { open, encryptObject } from 'web-enc-at-rest'
 
 
 export default defineNuxtPlugin((nuxt) => {
+  // create web-enc-at-rest context, aka logging in
+  // const wearContext = open('admin', 'admin')
+
   // Nuxt3 specific way to load runtime env vars
   const config = useRuntimeConfig();
-  const directus = { url: config.public.apiUrl }
+  const qryoOptions = { url: config.public.apiUrl, wearContext: 'ha' }
 
   const vueQueryState = useState<DehydratedState | null>("vue-query");
 
@@ -27,10 +31,10 @@ export default defineNuxtPlugin((nuxt) => {
    * Creates an Indexed DB persister
    * @see https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API
    */
-  function createIDBPersister(idbValidKey: IDBValidKey = "qryo") {
+  function createIDBPersister(idbValidKey: IDBValidKey) {
     return {
       persistClient: async (client: PersistedClient) => {
-        set(idbValidKey, client);
+        set(idbValidKey, client)
       },
       restoreClient: async () => {
         return await get<PersistedClient>(idbValidKey);
@@ -44,14 +48,14 @@ export default defineNuxtPlugin((nuxt) => {
   const clientPersister = (queryClient: QueryClient) => {
     return persistQueryClient({
       queryClient,
-      persister: createIDBPersister()
+      persister: createIDBPersister('qryo')
     })
   }
 
   const options: VueQueryPluginOptions = { queryClient, clientPersister }
 
+  nuxt.vueApp.use(QryoPlugin, qryoOptions)
   nuxt.vueApp.use(VueQueryPlugin, options)
-  nuxt.vueApp.use(QryoPlugin, directus)
 
   if (process.server) {
     nuxt.hooks.hook("app:rendered", () => {

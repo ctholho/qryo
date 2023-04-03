@@ -88,10 +88,12 @@ importers:
       '@tanstack/vue-query': ^4.26.1
       '@vueuse/nuxt': ^9.13.0
       nuxt: ^3.2.3
+      web-enc-at-rest: ^1.0.1
     dependencies:
       '@akronym/indirectus': link:../../packages/indirectus
       '@akronym/qryo': link:../../packages/qryo
       '@tanstack/vue-query': 4.26.1
+      web-enc-at-rest: 1.0.1
     devDependencies:
       '@directus/sdk': 10.3.1
       '@nuxtjs/tailwindcss': 6.6.0
@@ -2908,7 +2910,7 @@ packages:
       postcss-custom-properties: 13.1.4_postcss@8.4.21
       postcss-nesting: 11.2.1_postcss@8.4.21
       tailwind-config-viewer: 1.7.2_tailwindcss@3.2.7
-      tailwindcss: 3.2.7_postcss@8.4.21
+      tailwindcss: 3.2.7
       ufo: 1.1.1
     transitivePeerDependencies:
       - rollup
@@ -3655,7 +3657,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.1.4_@types+node@18.15.3
+      vite: 4.1.4
       vue: 3.2.47
     dev: true
 
@@ -9799,9 +9801,41 @@ packages:
       open: 7.4.2
       portfinder: 1.0.32
       replace-in-file: 6.3.5
-      tailwindcss: 3.2.7_postcss@8.4.21
+      tailwindcss: 3.2.7
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /tailwindcss/3.2.7:
+    resolution: {integrity: sha512-B6DLqJzc21x7wntlH/GsZwEXTBttVSl1FtCzC8WP4oBc/NKef7kaax5jeihkkCEWc831/5NDJ9gRNDK6NEioQQ==}
+    engines: {node: '>=12.13.0'}
+    hasBin: true
+    dependencies:
+      arg: 5.0.2
+      chokidar: 3.5.3
+      color-name: 1.1.4
+      detective: 5.2.1
+      didyoumean: 1.2.2
+      dlv: 1.1.3
+      fast-glob: 3.2.12
+      glob-parent: 6.0.2
+      is-glob: 4.0.3
+      lilconfig: 2.1.0
+      micromatch: 4.0.5
+      normalize-path: 3.0.0
+      object-hash: 3.0.0
+      picocolors: 1.0.0
+      postcss: 8.4.21
+      postcss-import: 14.1.0_postcss@8.4.21
+      postcss-js: 4.0.1_postcss@8.4.21
+      postcss-load-config: 3.1.4_postcss@8.4.21
+      postcss-nested: 6.0.0_postcss@8.4.21
+      postcss-selector-parser: 6.0.11
+      postcss-value-parser: 4.2.0
+      quick-lru: 5.1.1
+      resolve: 1.22.1
+    transitivePeerDependencies:
+      - ts-node
     dev: true
 
   /tailwindcss/3.2.7_aesdjsunmf4wiehhujt67my7tu:
@@ -9829,40 +9863,6 @@ packages:
       postcss-import: 14.1.0_postcss@8.4.21
       postcss-js: 4.0.1_postcss@8.4.21
       postcss-load-config: 3.1.4_aesdjsunmf4wiehhujt67my7tu
-      postcss-nested: 6.0.0_postcss@8.4.21
-      postcss-selector-parser: 6.0.11
-      postcss-value-parser: 4.2.0
-      quick-lru: 5.1.1
-      resolve: 1.22.1
-    transitivePeerDependencies:
-      - ts-node
-    dev: true
-
-  /tailwindcss/3.2.7_postcss@8.4.21:
-    resolution: {integrity: sha512-B6DLqJzc21x7wntlH/GsZwEXTBttVSl1FtCzC8WP4oBc/NKef7kaax5jeihkkCEWc831/5NDJ9gRNDK6NEioQQ==}
-    engines: {node: '>=12.13.0'}
-    hasBin: true
-    peerDependencies:
-      postcss: ^8.0.9
-    dependencies:
-      arg: 5.0.2
-      chokidar: 3.5.3
-      color-name: 1.1.4
-      detective: 5.2.1
-      didyoumean: 1.2.2
-      dlv: 1.1.3
-      fast-glob: 3.2.12
-      glob-parent: 6.0.2
-      is-glob: 4.0.3
-      lilconfig: 2.1.0
-      micromatch: 4.0.5
-      normalize-path: 3.0.0
-      object-hash: 3.0.0
-      picocolors: 1.0.0
-      postcss: 8.4.21
-      postcss-import: 14.1.0_postcss@8.4.21
-      postcss-js: 4.0.1_postcss@8.4.21
-      postcss-load-config: 3.1.4_postcss@8.4.21
       postcss-nested: 6.0.0_postcss@8.4.21
       postcss-selector-parser: 6.0.11
       postcss-value-parser: 4.2.0
@@ -10738,6 +10738,11 @@ packages:
     dependencies:
       defaults: 1.0.4
     dev: true
+
+  /web-enc-at-rest/1.0.1:
+    resolution: {integrity: sha512-xh4fhC55AaquFbvpYTB65OSA6YqdYb/f8LYvmdvJLgIG5EKO16XfKjWD1PvyNrzoo8MQn6zLpPJ83TNnjZWGvg==}
+    engines: {node: '>= 16'}
+    dev: false
 
   /web-streams-polyfill/3.2.1:
     resolution: {integrity: sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==}

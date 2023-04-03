@@ -6,10 +6,6 @@
   "license": "MIT",
   "repository": "akronym/qryo",
   "homepage": "https://akronym.org/qryo",
-  "funding": {
-    "type": "github",
-    "url": "https://github.com/sponsors/ctholho"
-  },
   "types": "build/lib/index.d.ts",
   "main": "build/lib/index.js",
   "module": "build/lib/index.esm.js",

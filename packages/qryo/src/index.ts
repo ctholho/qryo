@@ -3,7 +3,6 @@ import { Directus } from '@directus/sdk'
 import type { IDirectus, IItems } from '@directus/sdk'
 import { useQuery, useMutation } from '@tanstack/vue-query'
 
-
 export const QryoPlugin = {
   install(app: any, options: any) {
     const directusInstance = new Directus(options.url)

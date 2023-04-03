@@ -47,14 +47,12 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
       },
     }),
     ...buildConfigs({
-      name: 'indirectus',
-      packageDir: 'packages/indirectus',
-      jsName: 'InDirectus',
+      name: 'web-enc-at-rest',
+      packageDir: 'packages/web-enc-at-rest',
+      jsName: 'web-enc-at-rest',
       outputFile: 'index',
       entryFile: ['src/index.ts'],
-      globals: {
-        '@akronym/qryo': 'Qryo',
-      },
+      globals: { },
     }),
   ]
 }

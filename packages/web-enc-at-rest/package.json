@@ -1,11 +1,17 @@
 {
-  "name": "@akronym/indirectus",
+  "name": "@akronym/web-enc-at-rest",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erikh2000/web-enc-at-rest.git"
+  },
+  "author": "Erik Hermansen",
   "license": "MIT",
-  "repository": "",
-  "homepage": "https://akronym.org",
+  "bugs": {
+    "url": "https://github.com/erikh2000/web-enc-at-rest/issues"
+  },
+  "homepage": "https://github.com/erikh2000/web-enc-at-rest#readme",
   "types": "build/lib/index.d.ts",
   "main": "build/lib/index.js",
   "module": "build/lib/index.esm.js",
