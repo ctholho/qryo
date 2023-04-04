@@ -49,6 +49,7 @@ export interface IReviver { (key:string, value:string):any }
 function _replacePrimitiveValues(value:any):string {
   if (Number.isNaN(value)) return 'NaN'; // === comparison below won't work.
   for(let i = 0; i < replacementTable.length; ++i) {
+    // @ts-ignore
     if (replacementTable[i][0] === value) return replacementTable[i][1] as string;
   }
   return value;
@@ -56,6 +57,7 @@ function _replacePrimitiveValues(value:any):string {
 
 function _revivePrimitiveValues(value:string):any {
   for(let i = 0; i < replacementTable.length; ++i) {
+    // @ts-ignore
     if (replacementTable[i][1] === value) return replacementTable[i][0];
   }
   return value;

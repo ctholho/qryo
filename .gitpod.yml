@@ -15,6 +15,10 @@ ports:
     port: 3000
     onOpen: ignore
     visibility: public
+  - name: wear-example
+    port: 8080
+    onOpen: ignore
+    visibility: public
   - name: directus
     port: 8055
     onOpen: ignore

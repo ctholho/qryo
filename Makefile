@@ -16,6 +16,7 @@ start-barebones:
 	docker compose -f server/docker-compose.yaml up -d
 	pnpm exec pm2 --name packages start pnpm -- run watch
 	cd examples/nuxt && pnpm exec pm2 --name nuxt-example start pnpm -- run dev
+	cd examples/wear && pnpm exec pm2 --name wear-example start pnpm -- run start
 	pnpm exec pm2 --name docs start pnpm -- run docs:dev
 
 .PHONY: start
@@ -25,6 +26,7 @@ start: ## Start developing the app
 	@echo "Watching \033[32m/packages/**\033[0m and starting example app."
 	@echo "⚠️ These URLs are \033[31mpublicly\033[0m available as long as this workspace is running!\n"
 	@echo "\033[34mNuxt App:\033[0m $(shell gp url 3000)"
+	@echo "\033[34mWear App:\033[0m $(shell gp url 8080)"
 	@echo "\033[34mDirectus:\033[0m $(shell gp url 8055)"
 	@echo "\033[34mDocs:\033[0m $(shell gp url 5173)\n\n"
 	@echo "Login for Directus: admin@example.com, password: admin\n"

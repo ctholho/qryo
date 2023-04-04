@@ -20,7 +20,7 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@akronym/indirectus": ["packages/indirectus/src"],
+      "@akronym/web-enc-at-rest": ["packages/web-enc-at-rest/src"],
       "@akronym/qryo": ["packages/qryo/src"],
     }
   }

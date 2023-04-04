@@ -56,6 +56,7 @@ export function getOrCreateDeriveKeySalt():Uint8Array {
 function _addUserNameToSalt(userName:string, salt:Uint8Array) {
   let saltI = 0, saltLength = salt.length;
   for(let i = 0; i < userName.length; ++i) {
+    // @ts-ignore
     salt[saltI] = (salt[saltI] + userName.charCodeAt(i)) % 256;
     if (++saltI === saltLength) saltI = 0;
   }

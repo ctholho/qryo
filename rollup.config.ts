@@ -43,7 +43,8 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
       globals: { 
         '@directus/sdk': 'Directus',
         '@tanstack/vue-query': 'Query',
-        'vue': 'vue'
+        'vue': 'vue',
+        '@akronym/web-enc-at-rest': 'web-enc-at-rest'
       },
     }),
     ...buildConfigs({

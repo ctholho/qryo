@@ -1,7 +1,7 @@
 {
   "files": [],
   "references": [
-    { "path": "packages/indirectus" },
+    { "path": "packages/web-enc-at-rest" },
     { "path": "packages/qryo" },
   ]
 }

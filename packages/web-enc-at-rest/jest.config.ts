@@ -1,4 +1,4 @@
 export default {
-  displayName: 'indirectus',
+  displayName: 'web-enc-at-rest',
   preset: '../../jest-preset.js',
 }

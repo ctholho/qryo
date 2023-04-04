@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { get, clear } from "idb-keyval";
 import { qryo } from '@akronym/qryo'
-// import { open } from '@akronym/web-enc-at-rest'
 import { onlineManager } from '@tanstack/vue-query'
 
 interface Thing {
@@ -9,13 +8,14 @@ interface Thing {
   content: string;
 }
 
-// const context = await open('admin@test.corg', 'admin')
+const wear = inject('wear')
+console.log('wear', wear)
 
 const enabled = ref(false)
 const placeholderData: Thing = { id: 9999, content: 'placeholder' }
-// const { data, refetch } = qryo('readOne', 'thing', 1, { placeholderData, enabled })
+const { data, refetch } = qryo('readOne', 'thing', 1, { placeholderData, enabled })
 
-// const { mutate } = qryo('updateOne', 'thing', 1)
+const { mutate } = qryo('updateOne', 'thing', 1)
 
 const getMutations = async () => (await get('qryo'))?.clientState.mutations
 const mutations = ref(await getMutations())
@@ -23,7 +23,7 @@ const updateMutations = async () => {
   mutations.value = await getMutations()
 }
 
-const getPermStorage = async () => (await get('qryo'))?.clientState.queries[0].state.data.content
+const getPermStorage = async () => (await get('qryo'))?.clientState?.queries?.[0]?.state.data.content
 const permStorage = ref(await getPermStorage())
 const updatePermStorage = async  () => {
   permStorage.value = await getPermStorage()
@@ -45,7 +45,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="flex justify-center items-center h-full">
+  <div class="flex justify-center items-center mt-4 md:mt-0 md:h-full">
     <div class="grid grid-cols-4 gap-4 w-128">
       <div class="col-span-4 flex space-x-4">
         <button class="border-white border-2 px-4 py-1 rounded-lg" :class="!online && 'line-through'" @click="() => { online = !online}">online</button>

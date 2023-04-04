@@ -2,11 +2,14 @@ import { inject } from 'vue'
 import { Directus } from '@directus/sdk'
 import type { IDirectus, IItems } from '@directus/sdk'
 import { useQuery, useMutation } from '@tanstack/vue-query'
+import { open } from '@akronym/web-enc-at-rest'
 
 export const QryoPlugin = {
-  install(app: any, options: any) {
+  async install(app: any, options: any) {
     const directusInstance = new Directus(options.url)
     app.provide('directus', directusInstance)
+    const context = await open('admin', 'admin')
+    app.provide('wear', context)
   }
 }
 
