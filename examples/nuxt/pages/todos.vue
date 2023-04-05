@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { qryo } from '@akronym/qryo'
-import { onlineManager } from '@tanstack/vue-query'
+import { onlineManager, useQueryClient } from '@tanstack/vue-query'
 
 interface Thing {
   id: number;
@@ -11,12 +11,13 @@ const enabled = ref(true)
 const placeholderData: Thing[] = [{ id: 9999, content: 'placeholder' }]
 const { data: todos, refetch } = qryo('readByQuery', 'thing', { limit: -1 }, { placeholderData, enabled })
 
-const { mutate: create } = qryo('createOne', 'thing')
-const { mutate: deleteTodo } = qryo('deleteOne', 'thing')
+const queryClient = useQueryClient()
+const { mutate: createTodo } = qryo('createOne', 'thing', { limit: -1 }, { queryClient })
+const { mutate: deleteTodo } = qryo('deleteOne', 'thing', { limit: -1 }, { queryClient })
 
 const newTodo = ref('')
 const saveInput = () => {
-  create({ content: newTodo.value })
+  createTodo({ content: newTodo.value })
   newTodo.value = ''
 }
 
@@ -43,7 +44,7 @@ watchEffect(() => {
       >
       <button @click="saveInput" class="div-2 border-2 border-white px-8 py-2 text-2xl rounded-lg active:bg-gray-800">Create</button>
       <template v-if="todos?.data">
-        <div v-for="todo in todos.data" :key="todo.id" class="col-span-4 h-14 relative border-2 border-red-400 p-2 text-2xl rounded-lg overflow-hidden">
+        <div v-for="todo in todos.data" :key="todo.content" class="col-span-4 h-14 relative border-2 border-red-400 p-2 text-2xl rounded-lg overflow-hidden">
           {{ todo?.content }}
           <button class="absolute bottom-0 right-0 m-1 text-xs text-gray-500" @click="deleteTodo(todo.id)">delete</button>
         </div>

@@ -9,6 +9,7 @@ tasks:
     init: |
       pnpm i --shamefully-hoist
       make start
+    command: make start
 
 ports:
   - name: nuxt-example

@@ -8,9 +8,6 @@ interface Thing {
   content: string;
 }
 
-const wear = inject('wear')
-console.log('wear', wear)
-
 const enabled = ref(false)
 const placeholderData: Thing = { id: 9999, content: 'placeholder' }
 const { data, refetch } = qryo('readOne', 'thing', 1, { placeholderData, enabled })

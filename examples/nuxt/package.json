@@ -14,8 +14,8 @@
     "nuxt": "^3.2.3"
   },
   "dependencies": {
-    "@akronym/web-enc-at-rest": "workspace:^0.0.1",
     "@akronym/qryo": "workspace:^0.0.1",
+    "@akronym/web-enc-at-rest": "workspace:^0.0.1",
     "@tanstack/vue-query": "^4.26.1"
   }
 }

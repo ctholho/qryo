@@ -13,7 +13,7 @@ export default defineNuxtPlugin((nuxt) => {
 
   // Nuxt3 specific way to load runtime env vars
   const config = useRuntimeConfig();
-  const qryoOptions = { url: config.public.apiUrl, wearContext: 'ha' }
+  const qryoOptions = { url: config.public.apiUrl, wearContext: 'qryo' }
 
   const vueQueryState = useState<DehydratedState | null>("vue-query");
 
@@ -48,7 +48,7 @@ export default defineNuxtPlugin((nuxt) => {
   const clientPersister = (queryClient: QueryClient) => {
     return persistQueryClient({
       queryClient,
-      persister: createIDBPersister('qryo')
+      persister: createIDBPersister(qryoOptions.wearContext)
     })
   }
 

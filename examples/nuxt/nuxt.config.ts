@@ -21,6 +21,11 @@ export default defineNuxtConfig({
       appUrl,
     }
   },
+  app: {
+    head: {
+      script: [ { children: 'globalThis.global = globalThis' } ],
+    },
+  },
   vite: {
     server: {
       // strictPort: true,
