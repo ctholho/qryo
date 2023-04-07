@@ -9,11 +9,11 @@ interface Thing {
 
 const enabled = ref(true)
 const placeholderData: Thing[] = [{ id: 9999, content: 'placeholder' }]
-const { data: todos, refetch } = qryo('readByQuery', 'thing', { limit: -1 }, { placeholderData, enabled })
+const { data: todos, refetch } = qryo('readByQuery', 'thing', [{ limit: -1 }], { placeholderData, enabled })
 
 const queryClient = useQueryClient()
-const { mutate: createTodo } = qryo('createOne', 'thing', { limit: -1 }, { queryClient })
-const { mutate: deleteTodo } = qryo('deleteOne', 'thing', { limit: -1 }, { queryClient })
+const { mutate: createTodo } = qryo('createOne', 'thing', [{ limit: -1 }], { queryClient })
+const { mutate: deleteTodo } = qryo('deleteOne', 'thing', [{ limit: -1 }], { queryClient })
 
 const newTodo = ref('')
 const saveInput = () => {
@@ -35,7 +35,7 @@ watchEffect(() => {
         <button class="border-white border-2 px-4 py-1 rounded-lg" :class="!enabled && 'line-through'" @click="() => { enabled = !enabled}">enable</button>
         <NuxtLink to="/" class="self-center">Go to index</NuxtLink>
       </div>
-      <button @click="refetch" class="div-2 border-2 border-white px-8 py-2 text-2xl rounded-lg active:bg-gray-800">Sync</button>
+      <button @click="refetch" class="div-2 border-2 border-white px-8 py-2 text-2xl rounded-lg active:bg-gray-800">Refetch</button>
       <input
         class="col-span-2 div-1 rounded-lg text-2xl p-2 text-black"
         autofocus
@@ -43,8 +43,8 @@ watchEffect(() => {
         v-model="newTodo"
       >
       <button @click="saveInput" class="div-2 border-2 border-white px-8 py-2 text-2xl rounded-lg active:bg-gray-800">Create</button>
-      <template v-if="todos?.data">
-        <div v-for="todo in todos.data" :key="todo.content" class="col-span-4 h-14 relative border-2 border-red-400 p-2 text-2xl rounded-lg overflow-hidden">
+      <template v-if="todos">
+        <div v-for="todo in todos" :key="todo.content" class="col-span-4 h-14 relative border-2 border-red-400 p-2 text-2xl rounded-lg overflow-hidden">
           {{ todo?.content }}
           <button class="absolute bottom-0 right-0 m-1 text-xs text-gray-500" @click="deleteTodo(todo.id)">delete</button>
         </div>

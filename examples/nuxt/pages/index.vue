@@ -10,9 +10,9 @@ interface Thing {
 
 const enabled = ref(false)
 const placeholderData: Thing = { id: 9999, content: 'placeholder' }
-const { data, refetch } = qryo('readOne', 'thing', 1, { placeholderData, enabled })
+const { data, refetch } = qryo('readOne', 'thing', [1], { placeholderData, enabled })
 
-const { mutate } = qryo('updateOne', 'thing', 1)
+const { mutate } = qryo('updateOne', 'thing', [1])
 
 const getMutations = async () => (await get('qryo'))?.clientState.mutations
 const mutations = ref(await getMutations())
@@ -20,7 +20,11 @@ const updateMutations = async () => {
   mutations.value = await getMutations()
 }
 
-const getPermStorage = async () => (await get('qryo'))?.clientState?.queries?.[0]?.state.data.content
+const getPermStorage = async () => {
+  const stored = await get('qryo')
+  const query = stored?.clientState?.queries?.find((q: any) => q.queryHash = "[\"thing\",1]")
+  return query?.state.data.content
+}
 const permStorage = ref(await getPermStorage())
 const updatePermStorage = async  () => {
   permStorage.value = await getPermStorage()
@@ -31,9 +35,9 @@ const updateInput = (value: string) => {
   inputContent.value = value;
 }
 
-// const saveInput = () => {
-//   mutate({ content: inputContent.value })
-// }
+const saveInput = () => {
+  mutate({ content: inputContent.value })
+}
 
 const online = ref(true)
 watchEffect(() => {
@@ -50,7 +54,7 @@ watchEffect(() => {
         <button class="border-white border-2 px-4 py-1 rounded-lg"  @click="clear()">clear permanent storage</button>
         <NuxtLink to="/todos" class="self-center">Go to todos</NuxtLink>
       </div>
-      <button @click="refetch" class="div-2 border-2 border-white px-8 py-2 text-2xl rounded-lg active:bg-gray-800">Sync</button>
+      <button @click="refetch" class="div-2 border-2 border-white px-8 py-2 text-2xl rounded-lg active:bg-gray-800">Refetch</button>
       <input
         v-if="data?.content"
         class="col-span-2 div-1 rounded-lg text-2xl p-2 text-black"
