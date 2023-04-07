@@ -38,25 +38,25 @@ It doesn't matter much if the underlying backend uses relational data or NoSQL b
 * The response objects have an attribute called `id`, among others
 * If it's an array, objects are homogenous
 
-You'll likely want to manipulate single items. Usually, you identify those items with an `id`. Because backend frameworks work in a very predictable way, That means we have a repeatable pattern for updating on the client as well without waiting for a confirmation of the server.
+You'll likely want to manipulate single items. Usually, you identify those items with an `id`. Because backend frameworks work in a very predictable way in order to generalize logic on the backend, we can rely on those patterns to build libraries that for optimistic updates and encrypted storage of queries and mutation queus.
 
-One challenge is to guarantee idempotency in CREATE operations. We need some server-side configuration for that to work. Luckily most databases allow for a way to create columns or attributes with a uniqueness constraint. This `idempotency_key` can be abstracted away your normal client request if it follows the same rules everywhere – which is a sensible idea in any case.
+One minor challenge is to guarantee idempotency for CREATE operations. We'll need some server-side configuration for that to work. Luckily most databases allow for a way to create columns or attributes with a uniqueness constraint. This `idempotency_key` can be abstracted away from your normal client request if it follows the same rules everywhere – which is a sensible idea in any case. Developers implementing a Django, Ruby or Laravel, etc. CRUD API might prefer a different way to make idempotent create requests and can avoid putting an idempotency_key in their data model. But that's their decision and Qryo should allow devs to ameliorate their requests in a global config.
 
 ## Playing around
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/ctholho/qryo)
 
-This starts a Nuxt example, Directus Instance and Vitepress for the docs.
+Opening the Gitpod Link starts a Nuxt example, Directus Instance and Vitepress for the docs.
 Making changes to `packages/qryo` will trigger a build and should be reflected in the Nuxt example.
 
-See which JS scripts are running with `pnpm exec pm2 ps`. Get the build logs for the packages by running `pnpm exec pm2 logs packages` or run `make logs`.
+See which scripts are running with `pnpm exec pm2 ps`. Get the build logs for the packages by running `pnpm exec pm2 logs packages` or run `make logs`.
 
 Run `make help` for all available makefile commands.
 
 You can also run the repo locally. There's no https support yet and you'll have to look into .gitpod.yml to see the env requirements.
 
 ## Roadmap
-0. Make everything work
+0. Make ~~CR~~UD work.
 1. Handle authentication and offer tools for offline authentication (if offline data is available)
 2. Encrypt user data
   * Consider putting encryption logic into web worker for client performance
