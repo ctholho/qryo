@@ -3,5 +3,6 @@
   "references": [
     { "path": "packages/web-enc-at-rest" },
     { "path": "packages/qryo" },
+    { "path": "packages/qryo-directus" },
   ]
 }

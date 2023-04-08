@@ -1,0 +1,3 @@
+# Qryo-Directus
+
+Directus-SDK specific bindings for Qryo. This is a bit of a drudgery. So it's just a stub. And in it's current form it's also a bit silly. Please, indulge me...

@@ -1,0 +1,43 @@
+{
+  "name": "@akronym/qryo-directus",
+  "version": "0.0.1",
+  "description": "",
+  "author": "ctholho",
+  "license": "MIT",
+  "repository": "akronym/qryo",
+  "homepage": "https://akronym.org/qryo",
+  "types": "build/lib/index.d.ts",
+  "main": "build/lib/index.js",
+  "module": "build/lib/index.esm.js",
+  "exports": {
+    ".": {
+      "types": "./build/lib/index.d.ts",
+      "import": "./build/lib/index.mjs",
+      "default": "./build/lib/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "files": [
+    "build/lib/*",
+    "build/umd/*",
+    "src"
+  ],
+  "scripts": {
+    "clean": "rimraf ./build",
+    "test:eslint": "eslint --ext .ts,.tsx ./src",
+    "test:types": "tsc",
+    "test:lib": "jest --config ./jest.config.ts",
+    "test:lib:dev": "pnpm run test:lib --watch",
+    "build:types": "tsc --build"
+  },
+  "dependencies": {
+    "@directus/sdk": "^10.3.3",
+    "@tanstack/query-async-storage-persister": "^4.27.1",
+    "@tanstack/query-core": "^4.27.0",
+    "@tanstack/query-persist-client-core": "^4.27.0",
+    "@tanstack/query-sync-storage-persister": "^4.27.1",
+    "@akronym/web-enc-at-rest": "workspace:^0.0.1",
+    "idb-keyval": "^6.2.0"
+  }
+}

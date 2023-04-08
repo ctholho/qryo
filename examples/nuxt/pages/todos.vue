@@ -44,7 +44,7 @@ watchEffect(() => {
       >
       <button @click="saveInput" class="div-2 border-2 border-white px-8 py-2 text-2xl rounded-lg active:bg-gray-800">Create</button>
       <template v-if="todos">
-        <div v-for="todo in todos" :key="todo.content" class="col-span-4 h-14 relative border-2 border-red-400 p-2 text-2xl rounded-lg overflow-hidden">
+        <div v-for="todo in todos" :key="todo.id" class="col-span-4 h-14 relative border-2 border-red-400 p-2 text-2xl rounded-lg overflow-hidden">
           {{ todo?.content }}
           <button class="absolute bottom-0 right-0 m-1 text-xs text-gray-500" @click="deleteTodo(todo.id)">delete</button>
         </div>

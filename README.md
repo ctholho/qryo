@@ -40,10 +40,19 @@ It doesn't matter much if the underlying backend uses relational data or NoSQL b
 
 You'll likely want to manipulate single items. Usually, you identify those items with an `id`. Because backend frameworks work in a very predictable way in order to generalize logic on the backend, we can rely on those patterns to build libraries that for optimistic updates and encrypted storage of queries and mutation queus.
 
-One minor challenge is to guarantee idempotency for CREATE operations. We'll need some server-side configuration for that to work. Luckily most databases allow for a way to create columns or attributes with a uniqueness constraint. This `idempotency_key` can be abstracted away from your normal client request if it follows the same rules everywhere – which is a sensible idea in any case. Developers implementing a Django, Ruby or Laravel, etc. CRUD API might prefer a different way to make idempotent create requests and can avoid putting an idempotency_key in their data model. But that's their decision and Qryo should allow devs to ameliorate their requests in a global config.
+## Idempotency
+One minor challenge is to guarantee idempotency for POST requests (e.g. for an RPC).
+In the case of BaaS, this can be handled easily because databases allow columns with a uniqueness constraint and adding a column à la `idempotency_key`. Users of Django, Rails or Laravel or Directus might choose to handle this differently without polluting their datamodel e.g. by using middleware together with Redis.
+On the frontend idempotency comes down to sending a unique key. Qryo allows users to set a sensible default which they can always overwrite per mutation.
+```
+// use a custom hash
+const { mutate } = directus.items('payment').createOne().qryo({ idempotency: req => hashPayment(req) })
+await mutate({ receiver, amount, timestamp })
+```
+
+For simple usecases `idempotency_key` can be a simple timestamp + random number and totally disappear for front-end devs (akin to how the Directus SDK handles user authorization and refresh tokens).
 
 ## Playing around
-
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/ctholho/qryo)
 
 Opening the Gitpod Link starts a Nuxt example, Directus Instance and Vitepress for the docs.
@@ -53,15 +62,22 @@ See which scripts are running with `pnpm exec pm2 ps`. Get the build logs for th
 
 Run `make help` for all available makefile commands.
 
-You can also run the repo locally. There's no https support yet and you'll have to look into .gitpod.yml to see the env requirements.
+You can also run the repo locally but it requires a bit more work.
+* There's no https support yet (for ServiceWorkers, eventually)
+* You'll have to look into `.gitpod.yml` and `.gitpod.Dockerfile` and replicate your local env to look the same. Installing node, pnpm, nvm (which are usually packaged with gitpod/workspace-full)
+* Find references of the `WORKSPACE_HOST` env variable in `server/docker-compose.yaml` and replace with static strings `localhost:8055` (for the server) and `localhost:3000` (for the nuxt example)
 
 ## Roadmap
-0. Make ~~CR~~UD work.
-1. Handle authentication and offer tools for offline authentication (if offline data is available)
-2. Encrypt user data
+1. Find a reliable way for applying mutations on offline-only items
+  * The problem is that an optimistic update doesn't have the real id. So mutations on that object
+    must be translated to the real id, once that id is available.
+  * While offline: creating and then deleting an item will cause the item to be posted
+  * There should be an easy way to display when an item is not yet synced. E.g. mixing in an attribute `_offline: true`.
+2. Handle authentication and offer tools for offline authentication (if offline data is available)
+3. Encrypt user data
   * Consider putting encryption logic into web worker for client performance
   * The query persister needs to have access to app context like user credentials.
-3. Find the best way to prefetch "all necessary" data on app initialization. E.g.:
+4. Find the best way to prefetch "all necessary" data on app initialization. E.g.:
   * Require devs to handle it themselves
   * Offer global config. But this still requires duplicated naming of the endpoints (in component and in config)
   * Parse codebase during build process and create prefetch functions if those queries look correct. E.g.:
@@ -77,4 +93,4 @@ You can also run the repo locally. There's no https support yet and you'll have 
     })
     ```
     `prefetch$` expects an object which is simply merged with the object that directus `readByQuery()` function expects.
-4. 
+5. 

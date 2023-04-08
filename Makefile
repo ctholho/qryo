@@ -25,10 +25,11 @@ start: ## Start developing the app
 	@clear
 	@echo "Watching \033[32m/packages/**\033[0m and starting example app."
 	@echo "⚠️ These URLs are \033[31mpublicly\033[0m available as long as this workspace is running!\n"
-	@echo "\033[34mNuxt App:\033[0m $(shell gp url 3000)"
-	@echo "\033[34mWear App:\033[0m $(shell gp url 8080)"
-	@echo "\033[34mDirectus:\033[0m $(shell gp url 8055)"
-	@echo "\033[34mDocs:\033[0m $(shell gp url 5173)\n\n"
+	@echo "If you're not using gitpod, you will have to do more configuration. Refer to README.md"
+	@echo "\033[34mNuxt App:\033[0m $(shell gp url 3000 || echo "localhost:3000")"
+	@echo "\033[34mWear App:\033[0m $(shell gp url 8080 || echo "locahost:8080")"
+	@echo "\033[34mDirectus:\033[0m $(shell gp url 8055 || echo "localhost:8055")"
+	@echo "\033[34mDocs:\033[0m $(shell gp url 5173 || echo "localhost:5173")\n\n"
 	@echo "Login for Directus: admin@example.com, password: admin\n"
 
 .PHONY: stop

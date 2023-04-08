@@ -1,6 +1,7 @@
 let apiUrl = 'http://localhost:8055'
 let appUrl = 'http://localhost:3000'
 
+// using gitpod
 if (process.env.WORKSPACE_HOST) {
   apiUrl = 'https://8055-' + process.env.WORKSPACE_HOST
   appUrl = 'https://3000-' + process.env.WORKSPACE_HOST

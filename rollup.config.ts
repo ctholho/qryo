@@ -48,6 +48,18 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
       },
     }),
     ...buildConfigs({
+      name: 'qryo-directus',
+      packageDir: 'packages/qryo-directus',
+      jsName: 'QryoDirectus',
+      outputFile: 'index',
+      entryFile: ['src/index.ts'],
+      globals: { 
+        '@directus/sdk': 'Directus',
+        '@tanstack/vue-query': 'Query',
+        'vue': 'vue',
+      },
+    }),
+    ...buildConfigs({
       name: 'web-enc-at-rest',
       packageDir: 'packages/web-enc-at-rest',
       jsName: 'web-enc-at-rest',
