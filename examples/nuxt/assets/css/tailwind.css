@@ -4,8 +4,5 @@
 
 
 @layer base {
-  html { @apply bg-black text-white h-full; }
-  body { @apply h-full ; }
-  div#__nuxt { @apply h-full; }
-
+  html { @apply bg-black text-white; }
 }

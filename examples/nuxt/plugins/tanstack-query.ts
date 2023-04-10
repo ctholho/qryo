@@ -1,10 +1,9 @@
 import type { DehydratedState, VueQueryPluginOptions } from "@tanstack/vue-query";
 import { VueQueryPlugin, QueryClient, hydrate, dehydrate } from "@tanstack/vue-query";
 import { persistQueryClient } from '@tanstack/query-persist-client-core'
-import { QryoPlugin } from '@akronym/qryo'
+import { QryoDirectusPlugin } from '@akronym/qryo-directus'
 import { get, set, del } from "idb-keyval";
 import { PersistedClient, Persister } from "@tanstack/query-persist-client-core";
-import { open, encryptObject } from 'web-enc-at-rest'
 
 
 export default defineNuxtPlugin((nuxt) => {
@@ -54,7 +53,7 @@ export default defineNuxtPlugin((nuxt) => {
 
   const options: VueQueryPluginOptions = { queryClient, clientPersister }
 
-  nuxt.vueApp.use(QryoPlugin, qryoOptions)
+  nuxt.vueApp.use(QryoDirectusPlugin, qryoOptions)
   nuxt.vueApp.use(VueQueryPlugin, options)
 
   if (process.server) {

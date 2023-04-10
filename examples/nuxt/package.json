@@ -15,7 +15,9 @@
   },
   "dependencies": {
     "@akronym/qryo": "workspace:^0.0.1",
+    "@akronym/qryo-directus": "workspace:^0.0.1",
     "@akronym/web-enc-at-rest": "workspace:^0.0.1",
-    "@tanstack/vue-query": "^4.26.1"
+    "@tanstack/vue-query": "^4.26.1",
+    "idb-keyval": "^6.2.0"
   }
 }

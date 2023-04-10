@@ -6,7 +6,7 @@
   "scripts": {
     "watch": "webpack --watch",
     "build": "webpack",
-    "http": "http-server -o ./ -c-1",
+    "http": "http-server -c-1",
     "start": "pnpm run build && pnpm run http"
   },
   "author": "Erik Hermansen",

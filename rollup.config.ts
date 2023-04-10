@@ -43,7 +43,6 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
       globals: { 
         '@directus/sdk': 'Directus',
         '@tanstack/vue-query': 'Query',
-        'vue': 'vue',
         '@akronym/web-enc-at-rest': 'web-enc-at-rest'
       },
     }),
@@ -55,8 +54,7 @@ export default function rollup(options: RollupOptions): RollupOptions[] {
       entryFile: ['src/index.ts'],
       globals: { 
         '@directus/sdk': 'Directus',
-        '@tanstack/vue-query': 'Query',
-        'vue': 'vue',
+        '@akronym/qryo': 'Qryo'
       },
     }),
     ...buildConfigs({
@@ -304,7 +302,7 @@ function umdProd({
       }),
       visualizer({
         filename: `${packageDir}/build/stats.json`,
-        json: true,
+        template: 'raw-data',
         gzipSize: true,
       }),
     ],

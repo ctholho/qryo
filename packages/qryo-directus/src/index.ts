@@ -1,25 +1,101 @@
-import { Directus } from '@directus/sdk';
+import { qryoQuery, qryoMutation } from '@akronym/qryo'
+import { Directus, ItemsHandler } from '@directus/sdk'
+import { optimisticCreate } from './optimistics'
 
-class ExtendedDirectus extends Directus {
-  items(collection) {
-    this.collection = collection;
-    return this;
-  }
-
-  readByQuery(queryOptions) {
-    this.action = 'readByQuery';
-    this.queryOptions = queryOptions;
-    return this;
-  }
-
-  qryo(additionalOptions) {
-    const { placeholderData, enabled } = additionalOptions;
-    const key = [this.queryOptions];
-    return qryo(this.action, this.collection, key, { placeholderData, enabled });
+export const QryoDirectusPlugin = {
+  async install(app, options) {
+    // TODO: CURRENTLY DISABLED
+    // const directusInstance = new QryoDirectus(options.url)
+    // app.provide('directus', directusInstance)
   }
 }
 
-const directusInstance = new ExtendedDirectus('http://localhost:8055'); // Replace with your Directus endpoint
+export class QryoItems extends ItemsHandler {
+  constructor(directus, collection) {
+    super(collection, directus.transport)
+  }
 
-// Usage example:
-const { data } = directusInstance.items('todos').readByQuery({ limit: -1 }).qryo({ placeholderData, enabled });
+  _withQryoQuery(methodName, ...args) {
+    return {
+      qryo: (queryOptions) => {
+        const queryContext = {
+          queryKey: [this.collection, ...args],
+          queryFn: super[methodName],
+          context: this,
+          args,
+        }
+        return qryoQuery(queryContext, queryOptions)
+      },
+    }
+  }
+
+  _withQryoMutation(optimistic, methodName, ...args) {
+    return {
+      qryo: (queryOptions) => {
+        const queryContext = {
+          queryKey: [this.collection, ...args],
+          queryFn: super[methodName],
+          context: this,
+          args,
+        }
+        if (optimistic) {
+          // TODO: Filter out keys in `optimisticKeys`
+          return qryoMutation(queryContext, optimistic({ collection: this.collection, key: args, queryOptions }))
+        }
+        return qryoMutation(queryContext, queryOptions)
+      },
+    }
+  }
+
+  readByQuery(...args) {
+    return this._withQryoQuery('readByQuery', ...args)
+  }
+
+	readOne(...args) {
+    return this._withQryoQuery('readOne', ...args)
+	}
+
+	readMany(...args) {
+    return this._withQryoQuery('readMany', ...args)
+	}
+
+  // TODO: Mutations can also return data and should also use Query
+  // if they are called with `createOne({ ..., fields: ['exampleColumn'] })
+	createOne(...args) {
+    return this._withQryoMutation(optimisticCreate, 'createOne', ...args)
+	}
+
+	createMany(...args) {
+    return this._withQryoMutation(undefined, 'createMany', ...args)
+	}
+
+	updateOne(...args) {
+    return this._withQryoMutation(undefined, 'updateOne', ...args)
+	}
+
+	// updateMany(...args) {
+	// }
+
+	// updateBatch(...args) {
+	// }
+
+	// updateByQuery(...args) {
+	// }
+
+	deleteOne(...args) {
+    return this._withQryoMutation(undefined, 'deleteOne', ...args)
+	}
+
+	// async deleteMany(...args) {
+	// }
+}
+
+export class QryoDirectus extends Directus {
+  constructor(url: string, options = {}) {
+    super(url, options)
+  }
+
+  items(collection: string) {
+    return new QryoItems(this, collection)
+  }
+}

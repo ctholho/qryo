@@ -13,7 +13,6 @@ export default defineNuxtConfig({
   telemetry: true,
   modules: [
     '@nuxtjs/tailwindcss',
-    // '@nuxtjs/i18n',
     '@vueuse/nuxt',
   ],
   runtimeConfig: {
@@ -21,11 +20,6 @@ export default defineNuxtConfig({
       apiUrl,
       appUrl,
     }
-  },
-  app: {
-    head: {
-      script: [ { children: 'globalThis.global = globalThis' } ],
-    },
   },
   vite: {
     server: {

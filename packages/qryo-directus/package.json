@@ -33,11 +33,6 @@
   },
   "dependencies": {
     "@directus/sdk": "^10.3.3",
-    "@tanstack/query-async-storage-persister": "^4.27.1",
-    "@tanstack/query-core": "^4.27.0",
-    "@tanstack/query-persist-client-core": "^4.27.0",
-    "@tanstack/query-sync-storage-persister": "^4.27.1",
-    "@akronym/web-enc-at-rest": "workspace:^0.0.1",
-    "idb-keyval": "^6.2.0"
+    "@akronym/qryo": "workspace:^0.0.1"
   }
 }

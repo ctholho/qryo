@@ -24,7 +24,7 @@ services:
     depends_on:
       - database
     environment:
-      PUBLIC_URL: https://8055-${WORKSPACE_HOST}
+      PUBLIC_URL: ${DIRECTUS_URL}
       SECRET: 'my-directus-secret'
       KEY: b1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6
       # db settings
@@ -39,8 +39,7 @@ services:
       ADMIN_PASSWORD: admin
       # CORS
       CORS_ENABLED: true
-      CORS_ORIGIN: https://3000-${WORKSPACE_HOST},localhost:3000
-      CORS_METHODS: GET, POST,PATCH,DELETE
+      CORS_ORIGIN: ${NUXT_URL}
 
 volumes:
   postgres:

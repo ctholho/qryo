@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { get, clear } from "idb-keyval";
-import { qryo } from '@akronym/qryo'
 import { onlineManager } from '@tanstack/vue-query'
+import { QryoDirectus } from '@akronym/qryo-directus'
 
-interface Thing {
-  id: number;
-  content: string;
-}
+const config = useRuntimeConfig()
+const directus = new QryoDirectus(config.public.apiUrl)
 
 const enabled = ref(false)
-const placeholderData: Thing = { id: 9999, content: 'placeholder' }
-const { data, refetch } = qryo('readOne', 'thing', [1], { placeholderData, enabled })
+const placeholderData = { id: 9999, content: 'placeholder' }
+const { data, refetch } = directus
+  .items('thing')
+  .readOne(1)
+  .qryo({ placeholderData, enabled })
 
-const { mutate } = qryo('updateOne', 'thing', [1])
+const { mutate } = directus.items('thing').updateOne(1).qryo()
 
 const getMutations = async () => (await get('qryo'))?.clientState.mutations
 const mutations = ref(await getMutations())
@@ -46,32 +47,33 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="flex justify-center items-center mt-4 md:mt-0 md:h-full">
-    <div class="grid grid-cols-4 gap-4 w-128">
+  <div class="flex justify-center mt-4">
+    <div class="grid grid-cols-4 gap-4 max-w-md">
       <div class="col-span-4 flex space-x-4">
         <button class="border-white border-2 px-4 py-1 rounded-lg" :class="!online && 'line-through'" @click="() => { online = !online}">online</button>
         <button class="border-white border-2 px-4 py-1 rounded-lg" :class="!enabled && 'line-through'" @click="() => { enabled = !enabled}">enable</button>
-        <button class="border-white border-2 px-4 py-1 rounded-lg"  @click="clear()">clear permanent storage</button>
-        <NuxtLink to="/todos" class="self-center">Go to todos</NuxtLink>
+        <button class="border-white border-2 px-4 py-1 rounded-lg whitespace-nowrap"  @click="clear()">empty cache</button>
+        <div class="flex-1" />
+        <NuxtLink to="/todos" class="self-center whitespace-nowrap">To Todos</NuxtLink>
       </div>
-      <button @click="refetch" class="div-2 border-2 border-white px-8 py-2 text-2xl rounded-lg active:bg-gray-800">Refetch</button>
+      <button @click="refetch" class="div-2 border-2 border-white py-2 text-xl rounded-lg active:bg-gray-800">Refetch</button>
       <input
         v-if="data?.content"
-        class="col-span-2 div-1 rounded-lg text-2xl p-2 text-black"
+        class="col-span-2 div-1 rounded-lg text-2xl px-2 text-black"
         autofocus
         type="text"
         :value="data.content"
         @input="updateInput($event.target.value)"
       >
-      <button @click="saveInput" class="div-2 border-2 border-white px-8 py-2 text-2xl rounded-lg active:bg-gray-800">Save</button>
-      <div class="col-span-4 h-14 relative border-2 border-red-400 p-2 text-2xl rounded-lg overflow-hidden">
+      <button @click="saveInput" class="div-2 border-2 border-white py-2 text-xl rounded-lg active:bg-gray-800">Save</button>
+      <div class="col-span-4 h-12 relative border-2 border-red-400 p-2 text-xl rounded-lg overflow-hidden">
         {{ data?.content }}
-        <div class="absolute bottom-0 right-0 m-1 text-xs text-gray-500">query data</div>
+        <div class="absolute bottom-0 right-0 m-1 text-xs text-gray-500">memory</div>
       </div>
-      <div class="col-span-4 h-14 relative border-2 border-green-400 p-2 text-2xl rounded-lg overflow-y-scroll">
+      <div class="col-span-4 h-12 relative border-2 border-green-400 p-2 text-xl rounded-lg overflow-y-scroll">
         {{ permStorage }}
         <ButtonRefresh @click="updatePermStorage" />
-        <div class="absolute bottom-0 right-0 m-1 text-xs text-gray-500">permanent storage</div>
+        <div class="absolute bottom-0 right-0 m-1 text-xs text-gray-500">cache</div>
       </div>
       <div class="col-span-4 h-28 relative border-2 border-green-400 p-2 text-xs rounded-lg overflow-y-auto">
         <p v-for="mutation in mutations">{{ mutation.state.variables }}</p>
