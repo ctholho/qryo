@@ -13,18 +13,11 @@ const { data: todos, refetch } = directus
   .readByQuery({ limit: -1 })
   .qryo({ placeholderData, enabled })
 
-// `optimisticKeys` is a crutch until we find the best approach to
-// allow reads and mutations to be semi-independent from each other.
-// 'limit' is necessary because above we use `readByQuery({ limit: -1 })`
-// TODO: not yet implemented in packages/qryo-directus
-const optimisticKeys = ['limit']
-const { mutate: createTodo } = directus
-  .items('thing')
-  .createOne()
-  .qryo({ queryClient, optimisticKeys })
+// TODO: get queryClient in QryoMutation without explicit passing
+const { mutate: createTodo } = directus.items('thing').createOne().qryo({ queryClient })
 
 // This doesn't show optimistic updates
-const { mutate: deleteTodo } = directus.items('thing').deleteOne().qryo()
+const { mutate: deleteTodo } = directus.items('thing').deleteOne().qryo({ queryClient })
 
 const newTodo = ref('')
 const saveInput = () => {
@@ -61,6 +54,12 @@ watchEffect(() => {
           <button class="absolute bottom-0 right-0 m-1 text-xs text-gray-500" @click="deleteTodo(todo.id)">delete</button>
         </div>
       </template>
+      <!-- placeholderData prevents ever seeing this: -->
+      <div v-else class="col-span-4 h-12 relative border-2 border-gray-400 p-2 text-xl rounded-lg overflow-hidden">
+        <span class="animate-pulse ">
+          ... loading
+        </span>
+      </div>
     </div>
   </div>
 </template>

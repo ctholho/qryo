@@ -1,3 +1,5 @@
+// import prefetchPlugin from '@akronym/vite-plugin-qryo'
+
 let apiUrl = 'http://localhost:8055'
 let appUrl = 'http://localhost:3000'
 
@@ -22,9 +24,12 @@ export default defineNuxtConfig({
     }
   },
   vite: {
+    plugins: [
+      // prefetchPlugin(),
+    ],
     server: {
       // strictPort: true,
-      hmr: false,
+      hmr: true,
       // Configure Vite for HMR with Gitpod.
       // hmr: process.env.GITPOD_WORKSPACE_URL
       //   ? {
@@ -40,11 +45,3 @@ export default defineNuxtConfig({
     }
   }
 })
-
-/*
-
-wscat -c "wss://3000-ctholho-offlinefirstcru-rulkb0h478u.ws-eu90.gitpod.io"
-
-wscat -c "ws://localhost:24678"
-
-*/

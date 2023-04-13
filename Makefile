@@ -30,7 +30,7 @@ start: ## Start developing the app
 	@clear
 	@echo "Watching \033[32m/packages/**\033[0m and starting example app."
 	@echo "⚠️ On Gitpod? These URLs are \033[31mpublicly\033[0m available as long as this workspace is running!\n"
-	@echo "If you're not using gitpod, you will have to do more configuration. Refer to README.md"
+	@echo "Not on Gitpod? Https is not setup."
 	@echo "\033[34mNuxt App:\033[0m ${NUXT_URL}"
 	@echo "\033[34mWear App:\033[0m ${WEAR_URL}"
 	@echo "\033[34mDirectus:\033[0m ${DIRECTUS_URL}"

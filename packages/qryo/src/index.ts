@@ -1,36 +1,42 @@
 import { useQuery, useMutation } from '@tanstack/vue-query'
-import { unpackData } from './utils'
 
-interface QueryContext {
+export interface QueryContext {
   queryKey: string[]
   queryFn: any
-  context: any
-  args: any
+  queryFnThis: any
+  queryFnArgs: any
+  onReturnQuery?: (context: QueryContext) => unknown
+  result?: any
 }
 
-export function qryoQuery(queryContext: QueryContext, queryOptions: any = {}) {
-  const { queryKey, queryFn, context, args } = queryContext
+export function qryoQuery(queryContext: QueryContext) {
+  const { queryKey, queryFn, queryFnThis, queryFnArgs, onReturnQuery, ...rest } = queryContext
   return useQuery({
-    queryKey: queryKey,
+    queryKey,
     queryFn: async () => {
-      const run = await queryFn.apply(context, args)
-      return unpackData(queryFn.name) ? run.data : run
+      const result = await queryFn.apply(queryFnThis, queryFnArgs)
+
+      if (onReturnQuery) {
+        queryContext.result = result
+        return onReturnQuery(queryContext)
+      }
+      return result
     },
-    ...queryOptions,
+    ...rest,
   })
 }
 
-export function qryoMutation(queryContext: QueryContext, queryOptions: any = {}) {
-  const { queryFn, context, args: queryContextArgs } = queryContext
+export function qryoMutation(queryContext: QueryContext) {
+  const { queryFn, queryFnThis, queryFnArgs, ...rest } = queryContext
   return useMutation({
-    mutationFn: async (args) => {
-      if (queryContextArgs.length > 0) {
-        return queryFn.apply(context, [...queryContextArgs, args])
+    mutationFn: async (mutationFnArgs) => {
+      if (queryFnArgs.length > 0) {
+        return queryFn.apply(queryFnThis, [...queryFnArgs, mutationFnArgs])
       }
       else {
-        return queryFn.call(context, args)
+        return queryFn.call(queryFnThis, mutationFnArgs)
       }
     },
-    ...queryOptions,
+    ...rest,
   })
 }

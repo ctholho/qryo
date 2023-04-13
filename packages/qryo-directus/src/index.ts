@@ -1,97 +1,103 @@
 import { qryoQuery, qryoMutation } from '@akronym/qryo'
 import { Directus, ItemsHandler } from '@directus/sdk'
-import { optimisticCreate } from './optimistics'
+import type { Item, DirectusOptions, TypeMap } from '@directus/sdk'
+import { optimisticCreate, optimisticDelete } from './optimistics'
+import { unpackData } from './utils'
 
-export const QryoDirectusPlugin = {
-  async install(app, options) {
-    // TODO: CURRENTLY DISABLED
-    // const directusInstance = new QryoDirectus(options.url)
-    // app.provide('directus', directusInstance)
-  }
-}
-
-export class QryoItems extends ItemsHandler {
-  constructor(directus, collection) {
+export class QryoItems<T extends Item> extends ItemsHandler<T> {
+  constructor(directus: QryoDirectus, collection: string) {
     super(collection, directus.transport)
   }
 
-  _withQryoQuery(methodName, ...args) {
+  _withQryoQuery(methodName: string, directusQueryArgs: any[]) {
     return {
-      qryo: (queryOptions) => {
-        const queryContext = {
-          queryKey: [this.collection, ...args],
+      qryo: (qryoOptions) => {
+
+        // Set options for tanstack/query and qryo
+        const configuredContext = {
+          queryKey: [this.collection],
           queryFn: super[methodName],
-          context: this,
-          args,
+          queryFnThis: this,
+          onReturnQuery: unpackData,
+          queryFnArgs: directusQueryArgs,
         }
-        return qryoQuery(queryContext, queryOptions)
+        return qryoQuery({ ...qryoOptions, ...configuredContext })
       },
     }
   }
 
-  _withQryoMutation(optimistic, methodName, ...args) {
+  _withQryoMutation(optimistic: null | CallableFunction, methodName: string, directusQueryArgs: any[]) {
     return {
-      qryo: (queryOptions) => {
-        const queryContext = {
-          queryKey: [this.collection, ...args],
+      qryo: (qryoOptions) => {
+        // Set options for tanstack/query and qryo
+        const configuredContext = {
+          queryKey: [this.collection],
           queryFn: super[methodName],
-          context: this,
-          args,
+          queryFnThis: this,
+          queryFnArgs: directusQueryArgs,
         }
+
         if (optimistic) {
           // TODO: Filter out keys in `optimisticKeys`
-          return qryoMutation(queryContext, optimistic({ collection: this.collection, key: args, queryOptions }))
+          const optimisticOptions = {
+            collection: this.collection,
+            key: directusQueryArgs,
+            ...qryoOptions,
+          }
+          const op = optimistic(optimisticOptions)
+          console.log('test', op)
+          return qryoMutation({ ...op, ...configuredContext })
         }
-        return qryoMutation(queryContext, queryOptions)
+        return qryoMutation({ ...qryoOptions, ...configuredContext })
       },
     }
   }
 
-  readByQuery(...args) {
-    return this._withQryoQuery('readByQuery', ...args)
+  readByQuery(...args: any[]) {
+    return this._withQryoQuery('readByQuery', args)
   }
 
-	readOne(...args) {
-    return this._withQryoQuery('readOne', ...args)
+	readOne(...args: any[]) {
+    return this._withQryoQuery('readOne', args)
 	}
 
-	readMany(...args) {
-    return this._withQryoQuery('readMany', ...args)
+	readMany(...args: any[]) {
+    return this._withQryoQuery('readMany', args)
 	}
 
   // TODO: Mutations can also return data and should also use Query
   // if they are called with `createOne({ ..., fields: ['exampleColumn'] })
-	createOne(...args) {
-    return this._withQryoMutation(optimisticCreate, 'createOne', ...args)
+	createOne(...args: any[]) {
+    return this._withQryoMutation(optimisticCreate, 'createOne', args)
 	}
 
-	createMany(...args) {
-    return this._withQryoMutation(undefined, 'createMany', ...args)
+	createMany(...args: any[]) {
+    return this._withQryoMutation(null, 'createMany', args)
 	}
 
-	updateOne(...args) {
-    return this._withQryoMutation(undefined, 'updateOne', ...args)
+	updateOne(...args: any[]) {
+    return this._withQryoMutation(null, 'updateOne', args)
 	}
 
-	// updateMany(...args) {
+	// updateMany(...args: any[]) {
 	// }
 
-	// updateBatch(...args) {
+	// updateBatch(...args: any[]) {
 	// }
 
-	// updateByQuery(...args) {
+	// updateByQuery(...args: any[]) {
 	// }
 
-	deleteOne(...args) {
-    return this._withQryoMutation(undefined, 'deleteOne', ...args)
+	deleteOne(...args: any[]) {
+    return this._withQryoMutation(optimisticDelete, 'deleteOne', args)
 	}
 
-	// async deleteMany(...args) {
+	// async deleteMany(...args: any[]) {
 	// }
 }
 
 export class QryoDirectus extends Directus {
-  constructor(url: string, options = {}) {
+  constructor(url: string, options: DirectusOptions) {
     super(url, options)
   }
 
