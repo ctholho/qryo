@@ -82,17 +82,18 @@ An example: To get all items from a Directus collection, you have to set filters
 	}
 }
 ```
-Those are merely send to the server. If you want to implement an offline capable search,
-you have implement a function. In this case it's pretty straight forward if you have not
-much data and limited filters.
+If you want to use that on the client you have implement the same server logic. In this
+case it's pretty straight forward. But what if you use many filters and have a lot of
+data?
 
 Ways to handle this on Qryo's end:
 * Provide a BaaS specific QueryFactory to make requests "isomorphic".
 * Offer tools to implement dynamic filters – powerful but hard to get DX right
   * E.g. provide easy bindings for [alaSQL](http://alasql.org)?
   * Or: this is [an interesting approach](https://stackoverflow.com/a/20404324/8130552)
+* Obvious candidate for a web worker
 
-Another way is to do opt out and show that users are offline.
+Another way is to do opt out and simply show that users are offline.
 
 ### Idempotency
 One minor challenge is to guarantee idempotency for POST requests (e.g. for an RPC).
@@ -118,10 +119,10 @@ totally disappear for front-end devs (akin to how the Directus SDK handles user
 authorization and refresh tokens).
 
 ### Online Status
-Another minor challenge is reliable online status. [navigator.onLine](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/onLine)
-doesn't work in many cases. Showing users reliably when they are offline is good UX.
-It's important to build Qryo around the problem so we can ignore this from a technical
-point of view. E.g. by guaranteeing idempotency and infinite automatic retries.
+Another minor challenge is showing a reliable online status to users. [navigator.onLine](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/onLine)
+doesn't work in many cases. It's important to build Qryo around the problem so we can
+ignore this from a technical point of view. E.g. by guaranteeing idempotency and
+infinite automatic retries.
 
 Ways to handle it which all have drawbacks I will omit for brevity's sake.
 * Benchmark queries and alert if they are unexpectedly slow or don't resolve at all. 
