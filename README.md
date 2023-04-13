@@ -49,11 +49,52 @@ data usually arrives in a very specific form at the client:
 * If it's an array, objects are homogenous
 
 You'll likely want to manipulate single items. Usually, you identify those items with an
-`id`. Because backend frameworks work in a very predictable way in order to generalize
-logic on the backend, we can rely on those patterns to build libraries that for optimistic
-updates and encrypted storage of queries and mutation queus.
+`id`. Because backend frameworks work in a very predictable way, we can rely on those
+patterns for optimistic updates and encrypted storage.
 
-## Idempotency
+## Playing around
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/ctholho/qryo)
+
+Opening the Gitpod Link starts a Nuxt example, Directus Instance and Vitepress for the
+docs. Making changes to `packages/qryo` will trigger a build and should be reflected in
+the Nuxt example.
+
+See which scripts are running with `pnpm exec pm2 ps`. Get the build logs for the
+packages by running `pnpm exec pm2 logs packages` or run `make logs`.
+
+Run `make help` for all available makefile commands.
+
+You can also run the repo locally. You need Docker, Node, pnpm and GNU Make. Go to the
+project root and run `make init-local`.
+
+## Challenges and potential deal-breakers
+### How to handle dynamic filters?
+In the context of offline-first apps, implementing dynamic filters is hard. If you have
+an internet connection you can simply refetch if your filter changes, since the logic is
+on the backend. For offline-first you would have to implement that logic on the front-end
+as well.
+
+An example: To get all items from a Directus collection, you have to set filters. E.g.:
+```
+{
+	"content": {
+		"_contains": "my very special query"
+	}
+}
+```
+Those are merely send to the server. If you want to implement an offline capable search,
+you have implement a function. In this case it's pretty straight forward if you have not
+much data and limited filters.
+
+Ways to handle this on Qryo's end:
+* Provide a BaaS specific QueryFactory to make requests "isomorphic".
+* Offer tools to implement dynamic filters – powerful but hard to get DX right
+  * E.g. provide easy bindings for [alaSQL](http://alasql.org)?
+  * Or: this is [an interesting approach](https://stackoverflow.com/a/20404324/8130552)
+
+Another way is to do opt out and show that users are offline.
+
+### Idempotency
 One minor challenge is to guarantee idempotency for POST requests (e.g. for an RPC).
 In the case of BaaS, this can be handled easily because databases allow columns with a
 uniqueness constraint and adding a column à la `idempotency_key`. Users of Django, Rails
@@ -72,36 +113,19 @@ const { mutate } = directus
 await mutate({ receiver, amount, timestamp })
 ```
 
-For simple usecases `idempotency_key` can be a simple timestamp + random number and
+For simple use cases `idempotency_key` can be a simple timestamp + random number and
 totally disappear for front-end devs (akin to how the Directus SDK handles user
 authorization and refresh tokens).
 
-## Playing around
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/ctholho/qryo)
+### Online Status
+Another minor challenge is reliable online status. [navigator.onLine](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/onLine)
+doesn't work in many cases. Showing users reliably when they are offline is good UX.
+It's important to build Qryo around the problem so we can ignore this from a technical
+point of view. E.g. by guaranteeing idempotency and infinite automatic retries.
 
-Opening the Gitpod Link starts a Nuxt example, Directus Instance and Vitepress for the
-docs. Making changes to `packages/qryo` will trigger a build and should be reflected in
-the Nuxt example.
-
-See which scripts are running with `pnpm exec pm2 ps`. Get the build logs for the
-packages by running `pnpm exec pm2 logs packages` or run `make logs`.
-
-Run `make help` for all available makefile commands.
-
-You can also run the repo locally. You need Docker, Node, pnpm and GNU Make. Go to the
-project root and run `make init-local`.
-
-## Challenges and potential dealbrakers
-**How to handle dynamic filters?**
-Dynamically setting filters that query a long list of objects is easy online-only...
-you simply refetch if your filter changes because the logic is on the backend.
-For offline-first you have to implement that logic yourself.
-* Allow Devs to ignore it when sensible and fall back to online-only
-* We could offer tools to build it if necessary – powerful but hard to get DX right
-  * E.g. provide easy bindings for [alaSQL](http://alasql.org)?
-  * Or: this is [an interesting approach](https://stackoverflow.com/a/20404324/8130552)
-* Offline functionality might be degraded anyways, so it's OK to offer less capable
-  offline filters.
+Ways to handle it which all have drawbacks I will omit for brevity's sake.
+* Benchmark queries and alert if they are unexpectedly slow or don't resolve at all. 
+* Do the same but ping server on specific endpoint e.g. with websocket
 
 ## Roadmap
 1. Find a reliable way for applying mutations on offline-only items
@@ -113,7 +137,7 @@ For offline-first you have to implement that logic yourself.
 2. Handle authentication and offer tools for offline authentication (if offline data is
   available)
 3. Encrypt user data
-  * Consider putting encryption logic into web worker for client performance
+  * Consider putting logic into web worker for client performance
   * The query persister needs to have access to app context like user credentials.
 4. Find the best way to prefetch "all necessary" data on app initialization. E.g.:
   * Require devs to handle it themselves
